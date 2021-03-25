@@ -15,7 +15,6 @@ class Client(models.Model):
 class Project(TimestampUserMeta, models.Model):
     name = models.CharField(max_length=200, unique=True)
     description = models.TextField()
-    user = models.ForeignKey(get_user_model())
     client = models.ForeignKey(Client, on_delete=models.DO_NOTHING, default='No client')
 
     class Priority(models.IntegerChoices):
@@ -34,7 +33,7 @@ class Project(TimestampUserMeta, models.Model):
 
     status = models.IntegerField(choices=Status.choices, default=1, verbose_name='Project Status')
 
-    class __str__(self):
+    def __str__(self):
         return f'{self.name}'
 
 
@@ -66,3 +65,10 @@ class Issue(TimestampUserMeta, models.Model):
 
     issueType = models.IntegerField(choices=IssueType.choices, default=1, verbose_name='Issue Type')
 
+    def __str__(self):
+        return f'{self.summary}'
+
+
+class IssueImage(TimestampUserMeta, models.Model):
+    upload = models.FileField(upload_to='issue_images/')
+    filename = models.CharField(max_length=250)
