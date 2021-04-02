@@ -58,7 +58,7 @@ class Issue(TimestampUserMeta, models.Model):
 
     priority = models.IntegerField(choices=Priority.choices, default=1, verbose_name='Issue Priority')
 
-    class IssueType(models.IntegerField):
+    class IssueType(models.IntegerChoices):
         task = 1
         but = 2
         story = 3
@@ -69,6 +69,7 @@ class Issue(TimestampUserMeta, models.Model):
         return f'{self.summary}'
 
 
-class IssueImage(TimestampUserMeta, models.Model):
-    upload = models.FileField(upload_to='issue_images/')
-    filename = models.CharField(max_length=250)
+# class IssueImage(TimestampUserMeta, models.Model):
+#     upload = models.FileField(upload_to='issue_images/')
+#     filename = models.CharField(max_length=250)
+#     content = models.CharField(max_length=100)
