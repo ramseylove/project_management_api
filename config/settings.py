@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'apps.utils',
 
     # third-Party
-    # 'rest_framework',
+    'rest_framework',
     'storages',
     'imagekit',
 
@@ -167,3 +167,10 @@ else:
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/topics/auth/customizing/#substituting-a-custom-user-model
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ]
+}
