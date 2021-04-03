@@ -42,7 +42,7 @@ class Client(models.Model):
 class Project(TimestampUserMeta, models.Model):
     name = models.CharField(max_length=200, unique=True)
     description = models.TextField()
-    client = models.ForeignKey(Client, on_delete=models.SET_DEFAULT, default='Inactive_client')
+    client = models.ForeignKey(Client, on_delete=models.SET_DEFAULT, default=1)
 
     class Priority(models.IntegerChoices):
         low = 1
