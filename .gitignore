@@ -7,7 +7,7 @@
 .env
 
 ## ignore static collect files
-staticfiles/
+static/
 
 # ignore pyc files created by django or python
 *.pyc

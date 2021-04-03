@@ -12,18 +12,3 @@ services:
       - .:/code
     ports:
       - 8000:8000
-    depends_on:
-      - db
-  db:
-    image: postgres:11
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    environment:
-#      - "POSTGRES_HOST_AUTH_METHOD=trust"
-      - POSTGRES_DB=${DB}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASS}
-    ports:
-      - "${DB_PORT}:5432"
-volumes:
-  postgres_data:
