@@ -1,7 +1,34 @@
+from datetime import datetime
 from django.db import models
-from django.contrib.auth import get_user_model
+from django.utils.deconstruct import deconstructible
+from imagekit.models import ProcessedImageField
+from imagekit.processors import ResizeToFit
+import os
 
 from apps.utils.models import TimestampUserMeta
+
+
+@deconstructible
+class PathAndRename(object):
+
+    def __init__(self, sub_path):
+        self.path = sub_path
+
+    def __call__(self, instance, filename):
+        ext = filename.split('.')[-1]
+        timestamp = str(datetime.now().timestamp()).split('.')[0]
+        if instance.issue.id:
+            filename = f"{instance.issue.id}/{timestamp}-{instance.issue.id}.{ext}"
+        elif instance.issue.id and instance.comment.id:
+            filename = f"{instance.issue.id}/comment_images/{timestamp}-{instance.comment.id}.{ext}"
+        else:
+            filename = f"{timestamp}-no_issue-comment.{ext}"  # should throw error
+
+        return os.path.join(self.path, filename)
+
+
+issue_images_folder = PathAndRename('/issue_images')
+
 
 class Client(models.Model):
     name = models.CharField(max_length=200)
@@ -15,7 +42,7 @@ class Client(models.Model):
 class Project(TimestampUserMeta, models.Model):
     name = models.CharField(max_length=200, unique=True)
     description = models.TextField()
-    client = models.ForeignKey(Client, on_delete=models.DO_NOTHING, default='No client')
+    client = models.ForeignKey(Client, on_delete=models.SET_DEFAULT, default='Inactive_client')
 
     class Priority(models.IntegerChoices):
         low = 1
@@ -69,7 +96,25 @@ class Issue(TimestampUserMeta, models.Model):
         return f'{self.summary}'
 
 
-# class IssueImage(TimestampUserMeta, models.Model):
-#     upload = models.FileField(upload_to='issue_images/')
-#     filename = models.CharField(max_length=250)
-#     content = models.CharField(max_length=100)
+class Comment(TimestampUserMeta, models.Model):
+    comment = models.TextField()
+    issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.comment}'
+
+
+class IssueImage(TimestampUserMeta, models.Model):
+    issue_image = ProcessedImageField(upload_to=issue_images_folder,
+                                      processors=[ResizeToFit(1000)],
+                                      format='JPEG',
+                                      options={'quality': 90})
+    issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
+
+
+class CommentImage(TimestampUserMeta, models.Model):
+    comment_image = ProcessedImageField(upload_to=issue_images_folder,
+                                        processors=[ResizeToFit(1000)],
+                                        format='JPEG',
+                                        options={'quality': 90})
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)

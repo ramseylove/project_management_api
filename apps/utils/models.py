@@ -3,12 +3,17 @@ from django.contrib.auth import get_user_model
 
 
 class TimestampUserMeta(models.Model):
-    created_at = models.DateField(auto_now_add=True)
-    modified_at = models.DateField(auto_now=True)
-    deleted_at = models.DateField(auto_now=True)
-    created_by = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING, related_name='+')
-    modified_by = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING, related_name='+')
-    deleted_by = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING, related_name='+')
+    created_at = models.DateField(auto_now_add=True, verbose_name='Created At')
+    modified_at = models.DateField(auto_now=True, verbose_name='Modified At')
+    created_by = models.ForeignKey(get_user_model(),
+                                   default='Inactive_user',
+                                   on_delete=models.SET_DEFAULT,
+                                   related_name='+')
+    modified_by = models.ForeignKey(get_user_model(),
+                                    null=True,
+                                    default=None,
+                                    on_delete=models.DO_NOTHING,
+                                    related_name='+')
 
     class Meta:
         abstract = True

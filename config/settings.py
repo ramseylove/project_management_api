@@ -17,6 +17,8 @@ import os
 # load envrionment variable from .env file
 load_dotenv()
 
+USE_S3 = os.getenv('USE_S3')
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -37,11 +39,15 @@ ALLOWED_HOSTS = ['localhost', '0.0.0.0', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
-    #local
+    # local
     'apps.accounts',
+    'apps.api',
+    'apps.utils',
 
-    #third-Party
-    'rest_framework',
+    # third-Party
+    # 'rest_framework',
+    'storages',
+    'imagekit',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -91,7 +97,8 @@ DATABASES = {
         'NAME': os.getenv('DB'),
         'USER': os.getenv('DB_USER'),
         'PASSWORD': os.getenv('DB_PASS'),
-        'HOST': os.getenv('DB_HOST', '192.168.0.62'),
+        'HOST': '192.168.0.62',
+        # 'HOST': os.getenv('DB_HOST', '192.168.0.62'),
         'PORT': os.getenv('DB_PORT'),
 
     }
@@ -133,11 +140,28 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
-STATIC_URL = '/static/'
+if USE_S3:
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')  # access key
+    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')  # secret
+    AWS_STORAGE_BUCKET_NAME = 'pmb-space'
+    AWS_S3_ENDPOINT_URL = 'https://sfo3.digitaloceanspaces.com'
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+    # s3 static settings
+    STATIC_LOCATION = 'static'
+    STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_ENDPOINT_URL}/{STATIC_LOCATION}/'
+    STATICFILES_STORAGE = 'config.custom_storages.StaticStorage'
+    # s3 public media settings
+    PUBLIC_MEDIA_LOCATION = 'media'
+    MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_ENDPOINT_URL}/{PUBLIC_MEDIA_LOCATION}/'
+    DEFAULT_FILE_STORAGE = 'config.custom_storages.MediaStorage'
+else:
+    STATIC_URL = '/static/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # CUSTOM USER MODEL CONFIGS
 # ------------------------------------------------------------------------------
