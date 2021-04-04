@@ -8,7 +8,16 @@ from .forms import CustomUserCreationForm, CustomUserChangeForm
 CustomUser = get_user_model()
 
 
+class UserProfileAdmin(admin.StackedInline):
+    model = UserProfile
+    can_delete = False
+    verbose_name_plural = 'Profile'
+    fk_name = 'user'
+
+
 class CustomUserAdmin(UserAdmin):
+    inlines = (UserProfileAdmin, )
+
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = CustomUser
@@ -31,10 +40,11 @@ class CustomUserAdmin(UserAdmin):
     ordering = ('email',)
     filter_horizontal = ()
 
-
-class UserProfileAdmin(admin.ModelAdmin):
-    pass
+    def inline_instances(self, request, obj=None):
+        if not obj:
+            return list()
+        return super(CustomUserAdmin, self).get_inline_instances(request, obj)
 
 
 admin.site.register(CustomUser, CustomUserAdmin)
-admin.site.register(UserProfile, UserProfileAdmin)
+# admin.site.register(UserProfile, UserProfileAdmin)
