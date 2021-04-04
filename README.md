@@ -2,6 +2,11 @@
 
 A simple project management api built with django and django-rest-framework
 
+#TODO better schema documentation - swagger
+#TODO Image upload
+#TODO Link clients to users
+#TODO Create usertypes - developers, client
+#TODO Object Permissions 
 
 # schema
 

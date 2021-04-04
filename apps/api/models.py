@@ -87,7 +87,7 @@ class Issue(TimestampUserMeta, models.Model):
 
     class IssueType(models.IntegerChoices):
         task = 1
-        but = 2
+        bug = 2
         story = 3
 
     issueType = models.IntegerField(choices=IssueType.choices, default=1, verbose_name='Issue Type')
