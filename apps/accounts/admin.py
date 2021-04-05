@@ -23,7 +23,6 @@ class CustomUserAdmin(UserAdmin):
     model = CustomUser
     list_display = ['email', ]
     list_filter = ('is_staff', 'is_admin')
-    # fieldsets = UserAdmin.fieldsets
 
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
@@ -47,4 +46,3 @@ class CustomUserAdmin(UserAdmin):
 
 
 admin.site.register(CustomUser, CustomUserAdmin)
-# admin.site.register(UserProfile, UserProfileAdmin)
