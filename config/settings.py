@@ -5,7 +5,7 @@ import os
 # load envrionment variable from .env file
 load_dotenv()
 
-USE_S3 = os.getenv('USE_S3')
+# USE_S3 = os.getenv('USE_S3') == 'True'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
 ]
 
 MIDDLEWARE = [
@@ -137,12 +138,11 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
-if USE_S3:
+if os.environ.get('USE_S3'):
 
     AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')  # access key
     AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')  # secret
@@ -150,7 +150,7 @@ if USE_S3:
     AWS_S3_ENDPOINT_URL = 'https://sfo3.digitaloceanspaces.com'
     AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
     # s3 static settings
-    STATIC_LOCATION = 'static'
+    STATIC_LOCATION = STATICFILES_DIRS
     STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_ENDPOINT_URL}/{STATIC_LOCATION}/'
     STATICFILES_STORAGE = 'config.custom_storages.StaticStorage'
     # s3 public media settings
@@ -162,3 +162,4 @@ else:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
     MEDIA_URL = '/media/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+

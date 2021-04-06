@@ -3,13 +3,13 @@ version: '3.8'
 services:
   web:
     build: .
-    env_file:
-      - .env
     command: python /code/manage.py runserver 0.0.0.0:8000
     environment:
       - ENVIRONMENT=development
       - SECRET_KEY=${SECRET_KEY}
       - DEBUG=1
+    env_file:
+      - .env
     volumes:
       - .:/code
     ports:

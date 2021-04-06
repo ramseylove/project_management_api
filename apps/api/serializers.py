@@ -54,5 +54,7 @@ class IssueImageSerializer(serializers.ModelSerializer):
         model = IssueImage
         fields = (
             'id',
-            'issue_image'
+            'issue_image',
+            'issue',
         )
+        read_only_fields = ['issue']

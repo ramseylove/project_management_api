@@ -27,7 +27,7 @@ class PathAndRename(object):
         return os.path.join(self.path, filename)
 
 
-issue_images_folder = PathAndRename('/issue_images')
+issue_images_folder = PathAndRename('issue_images')
 
 
 class Client(models.Model):
