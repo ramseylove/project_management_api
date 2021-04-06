@@ -56,8 +56,16 @@ class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class IssueImageList(generics.ListCreateAPIView):
-    queryset = IssueImage.objects.filter()
+    # queryset = IssueImage.objects.filter()
     serializer_class = IssueImageSerializer
 
+    def get_object(self):
+        issue = self.request.query_params.get('issue_id')
+
     def get_queryset(self):
-        return self.queryset.filter(issue__id=self.kwargs['issue_id'])
+        queryset = IssueImage.objects.all()
+        issue_id = self.request.query_params.get('issue_id')
+        if issue_id is not None:
+            queryset = queryset.filter(issue_id=issue_id)
+        return queryset
+        # return self.queryset.filter(issue_id=self.kwargs['issue_id'])

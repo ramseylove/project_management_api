@@ -14,7 +14,15 @@ class ProjectSerializer(serializers.ModelSerializer):
                   'status',)
 
 
+class IssueImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = IssueImage
+        fields = ('issue_image', 'issue')
+
+
 class IssueSerializer(serializers.ModelSerializer):
+    issue_images = IssueImageSerializer(many=True)
 
     class Meta:
         model = Issue
@@ -26,6 +34,7 @@ class IssueSerializer(serializers.ModelSerializer):
             'status',
             'priority',
             'issueType',
+            'issue_images',
         )
 
 
