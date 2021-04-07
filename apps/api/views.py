@@ -61,6 +61,8 @@ class CommentList(generics.ListCreateAPIView):
         issue_id = self.request.query_params.get('issue_id')
         if issue_id is not None:
             queryset = queryset.filter(issue_id=issue_id)
+        else:
+            return Response("issue_id required", status=status.HTTP_400_BAD_REQUEST)
 
         return queryset
 
@@ -74,22 +76,26 @@ class CommentList(generics.ListCreateAPIView):
 class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+    lookup_url_kwarg = 'comment_id'
 
 
 class CommentImageList(generics.ListCreateAPIView):
     serializer_class = CommentImageSerializer
+    lookup_kwarg = 'comment_id'
+    queryset = CommentImage.objects.all()
 
-    def get_queryset(self):
-        queryset = CommentImage.objects.all()
-        comment_id = self.kwargs['pk']
-        if comment_id is not None:
-            queryset = queryset.filter(comment_id=comment_id)
-
-        return queryset
+    # def get_queryset(self):
+    #     queryset = CommentImage.objects.all()
+    #     comment_id = self.kwargs['comment_id']
+    #     if comment_id is not None:
+    #         queryset = queryset.filter(comment_id=comment_id)
+    #
+    #     return queryset
 
     def perform_create(self, serializer):
-        comment_id = self.kwargs['pk']
-        comment = Comment.objects.get(pk=comment_id)
+        # comment_id = self.kwargs['comment_id']
+
+        comment = Comment.objects.get(pk=self.kwargs)
         if comment:
             serializer.save(comment=comment)
 

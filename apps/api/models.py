@@ -18,6 +18,7 @@ class PathAndRename(object):
         ext = filename.split('.')[-1]
         timestamp = str(datetime.now().timestamp()).split('.')[0]
         if hasattr(instance, 'issue_id'):
+            # TODO refactor to use try except
             filename = f"{instance.issue_id}/{timestamp}-{instance.issue.id}.{ext}"
         elif hasattr(instance, 'comment'):
             filename = f"{instance.comment.issue.id}/comment_images/{timestamp}-{instance.comment.id}.{ext}"
@@ -117,4 +118,4 @@ class CommentImage(TimestampUserMeta, models.Model):
                                         processors=[ResizeToFit(1000)],
                                         format='JPEG',
                                         options={'quality': 90})
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name="comment_images")

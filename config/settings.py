@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'storages',
     'imagekit',
     'djoser',
+    'drf_yasg',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -67,12 +68,13 @@ ROOT_URLCONF = 'config.urls'
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 REST_FRAMEWORK = {
-'DEFAULT_AUTHENTICATION_CLASSES': [
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
-    ],
+        ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
-    ]
+        'rest_framework.permissions.IsAuthenticated',
+        ]
 }
 
 TEMPLATES = [
@@ -186,3 +188,5 @@ DJOSER = {
         'token_destroy': ['rest_framework.permissions.IsAuthenticated'],
     }
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

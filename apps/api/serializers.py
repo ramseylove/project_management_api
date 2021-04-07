@@ -18,11 +18,16 @@ class IssueImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = IssueImage
-        fields = ('issue_image', 'issue')
+        fields = (
+            'id',
+            'issue_image',
+            'issue',
+        )
+        read_only_fields = ['issue']
 
 
 class IssueSerializer(serializers.ModelSerializer):
-    issue_images = IssueImageSerializer(many=True)
+    issue_images = IssueImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Issue
@@ -38,28 +43,6 @@ class IssueSerializer(serializers.ModelSerializer):
         )
 
 
-class CommentSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Comment
-        fields = (
-            'id',
-            'comment',
-        )
-
-
-class IssueImageSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = IssueImage
-        fields = (
-            'id',
-            'issue_image',
-            'issue',
-        )
-        read_only_fields = ['issue']
-
-
 class CommentImageSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -70,3 +53,15 @@ class CommentImageSerializer(serializers.ModelSerializer):
             'comment',
         )
         read_only_fields = ['comment']
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    comment_images = CommentImageSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Comment
+        fields = (
+            'id',
+            'comment',
+            'comment_images',
+        )

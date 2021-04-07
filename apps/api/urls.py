@@ -8,7 +8,7 @@ urlpatterns = [
     path('issues/issueimages', IssueImageList.as_view()),
     path('issues/<int:issue_id>/', IssueDetail.as_view()),
     path('issues/comments', CommentList.as_view()),
-    path('issues/comments/<int:pk>/images/', CommentImageList.as_view()),
-    path('issues/comments/<int:pk>/', CommentDetail.as_view()),
+    path('issues/comments/<int:comment_id>/images/', CommentImageList.as_view()),
+    path('issues/comments/<int:comment_id>/', CommentDetail.as_view()),
 
 ]
