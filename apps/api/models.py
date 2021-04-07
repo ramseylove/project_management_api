@@ -17,10 +17,10 @@ class PathAndRename(object):
     def __call__(self, instance, filename):
         ext = filename.split('.')[-1]
         timestamp = str(datetime.now().timestamp()).split('.')[0]
-        if instance.issue_id:
+        if hasattr(instance, 'issue_id'):
             filename = f"{instance.issue_id}/{timestamp}-{instance.issue.id}.{ext}"
-        elif instance.issue_id and instance.comment.id:
-            filename = f"{instance.issue_id}/comment_images/{timestamp}-{instance.comment.id}.{ext}"
+        elif hasattr(instance, 'comment'):
+            filename = f"{instance.comment.issue.id}/comment_images/{timestamp}-{instance.comment.id}.{ext}"
         else:
             filename = f"{timestamp}-no_issue-comment.{ext}"  # should throw error
 

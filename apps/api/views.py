@@ -5,7 +5,12 @@ from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 
 from .models import Project, Issue, Comment, IssueImage, CommentImage
-from .serializers import ProjectSerializer, IssueSerializer, CommentSerializer, IssueImageSerializer
+from .serializers import \
+    ProjectSerializer, \
+    IssueSerializer, \
+    CommentSerializer, \
+    IssueImageSerializer, \
+    CommentImageSerializer
 
 
 class ProjectList(generics.ListAPIView):
@@ -45,19 +50,48 @@ class IssueList(generics.ListCreateAPIView):
 class IssueDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Issue.objects.all()
     serializer_class = IssueSerializer
+    lookup_url_kwarg = 'issue_id'
 
 
 class CommentList(generics.ListCreateAPIView):
-    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
     def get_queryset(self):
-        return self.queryset.filter(issue_id=self.kwargs['pk'])
+        queryset = Comment.objects.all()
+        issue_id = self.request.query_params.get('issue_id')
+        if issue_id is not None:
+            queryset = queryset.filter(issue_id=issue_id)
+
+        return queryset
+
+    def perform_create(self, serializer):
+        issue_id = self.request.query_params.get('issue_id')
+        issue = Issue.objects.get(pk=issue_id)
+        if issue:
+            serializer.save(issue=issue)
 
 
 class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+
+
+class CommentImageList(generics.ListCreateAPIView):
+    serializer_class = CommentImageSerializer
+
+    def get_queryset(self):
+        queryset = CommentImage.objects.all()
+        comment_id = self.kwargs['pk']
+        if comment_id is not None:
+            queryset = queryset.filter(comment_id=comment_id)
+
+        return queryset
+
+    def perform_create(self, serializer):
+        comment_id = self.kwargs['pk']
+        comment = Comment.objects.get(pk=comment_id)
+        if comment:
+            serializer.save(comment=comment)
 
 
 class IssueImageList(generics.ListCreateAPIView):

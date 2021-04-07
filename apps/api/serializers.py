@@ -58,3 +58,15 @@ class IssueImageSerializer(serializers.ModelSerializer):
             'issue',
         )
         read_only_fields = ['issue']
+
+
+class CommentImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CommentImage
+        fields = (
+            'id',
+            'comment_image',
+            'comment',
+        )
+        read_only_fields = ['comment']
