@@ -35,7 +35,7 @@ class IssueSerializer(serializers.ModelSerializer):
             'id',
             'summary',
             'description',
-            'project',
+            # 'project',
             'status',
             'priority',
             'issueType',

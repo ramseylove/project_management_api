@@ -18,6 +18,7 @@ from .serializers import \
 class ProjectList(generics.ListAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+    lookup_field = 'project_id'
 
     def get_queryset(self):
         user = get_user_model()
@@ -34,19 +35,33 @@ class ProjectList(generics.ListAPIView):
 class ProjectDetail(generics.RetrieveAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+    lookup_field = 'project_id'
 
 
 class IssueList(generics.ListCreateAPIView):
     queryset = Issue.objects.filter()
     serializer_class = IssueSerializer
+    # lookup_field = 'issue_id'
 
     def get_queryset(self):
-        queryset = Issue.objects.all()
-        project_id = self.request.query_params.get('project_id')
-        if project_id is not None:
-            queryset = queryset.filter(project_id=project_id)
-        # return self.queryset.filter(project_id=self.kwargs['project_id'])
-        return queryset
+        if self.kwargs['project_id']:
+            queryset = Issue.objects.filter(project_id=self.kwargs['project_id'])
+            if queryset.exists():
+                return queryset
+            else:
+                raise NotFound(f'Project not found')
+        else:
+            raise NotFound(f'Project id not found in url')
+
+    def perform_create(self, serializer):
+        # issue_id = self.request.data['issue']
+        # issue = Issue.objects.filter(pk=issue_id)
+        if self.kwargs['project_id']:
+            queryset = Project.objects.filter(pk=self.kwargs['project_id'])
+            if queryset.exists():
+                serializer.save(project=queryset.first())
+            else:
+                raise NotFound(f'Comment does not exist for the id: {issue_id}')
 
 
 class IssueDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -57,22 +72,25 @@ class IssueDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class CommentList(generics.ListCreateAPIView):
     serializer_class = CommentSerializer
+    lookup_field = 'issue_id'
 
     def get_queryset(self):
-        queryset = Comment.objects.all()
-        issue_id = self.request.query_params.get('issue_id')
-        if issue_id is not None:
-            queryset = queryset.filter(issue_id=issue_id)
+        if self.kwargs['issue_id']:
+            queryset = Comment.objects.filter(issue_id=self.kwargs['issue_id'])
+            if queryset.exists():
+                return queryset
+            else:
+                raise NotFound(f'Issue not found')
         else:
-            return Response("issue_id required", status=status.HTTP_400_BAD_REQUEST)
-
-        return queryset
+            raise NotFound(f'Issue id not found in url')
 
     def perform_create(self, serializer):
-        issue_id = self.request.query_params.get('issue_id')
-        issue = Issue.objects.get(pk=issue_id)
-        if issue:
-            serializer.save(issue=issue)
+        issue_id = self.kwargs['issue_id']
+        issue = Issue.objects.filter(pk=issue_id)
+        if issue.exists():
+            serializer.save(issue=issue.first())
+        else:
+            raise NotFound(f'Comment does not exist for the id: {issue_id}')
 
 
 class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -83,7 +101,7 @@ class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class CommentImageList(generics.ListCreateAPIView):
     serializer_class = CommentImageSerializer
-    lookup_kwarg = 'comment_id'
+    lookup_field = 'comment_id'
 
     def get_queryset(self):
         if self.kwargs['comment_id']:
@@ -106,30 +124,23 @@ class CommentImageList(generics.ListCreateAPIView):
 
 class IssueImageList(generics.ListCreateAPIView):
     serializer_class = IssueImageSerializer
-    # TODO refactor queryset and create to perform_create
+    lookup_field = 'issue_id'
+
     def get_queryset(self):
-        queryset = IssueImage.objects.all()
-        issue_id = self.request.query_params.get('issue_id')
-        if issue_id is not None:
-            queryset = queryset.filter(issue_id=issue_id)
-        return queryset
-        # return self.queryset.filter(issue_id=self.kwargs['issue_id'])
-
-    def create(self, request, *args, **kwargs):
-        issue = None
-        issue_image = request.data
-
-        if request.query_params.get('issue_id'):
-            issue = Issue.objects.get(pk=request.query_params.get('issue_id'))
-            print(issue)
-            if issue:
-                new_image = IssueImage.objects.create(issue_image=issue_image['issue_image'], issue=issue)
+        if self.kwargs['issue_id']:
+            queryset = IssueImage.objects.filter(issue_id=self.kwargs['issue_id'])
+            if queryset.exists():
+                return queryset
             else:
-                return Response("issue_required", status=status.HTTP_400_BAD_REQUEST)
+                raise NotFound(f'Issue not found')
+        else:
+            raise NotFound(f'Issue id not found in url')
 
-        new_image.save()
-
-        serializer = IssueImageSerializer(new_image)
-
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    def perform_create(self, serializer):
+        issue_id = self.kwargs['issue_id']
+        issue = Issue.objects.filter(pk=issue_id)
+        if issue.exists():
+            serializer.save(comment=issue.first())
+        else:
+            raise NotFound(f'Comment does not exist for the id: {issue_id}')
 
