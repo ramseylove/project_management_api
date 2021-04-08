@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Project, Issue, Comment, IssueImage, CommentImage
 
+# TODO Make Images writeable through Issue or Comment with nested serialization
 
 class IssueImageSerializer(serializers.ModelSerializer):
 

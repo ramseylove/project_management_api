@@ -3,7 +3,6 @@ from rest_framework import generics
 from rest_framework import status
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import ValidationError, NotFound
-from rest_framework.response import Response
 
 from .models import Project, Issue, Comment, IssueImage, CommentImage
 from .serializers import \
@@ -14,7 +13,8 @@ from .serializers import \
     CommentImageSerializer
 
 # TODO create relations between objects related_name like issues to issue_images
-# TODO Ability to upload images to Issue or Comment with nested serialization
+
+
 class ProjectList(generics.ListAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
@@ -35,7 +35,7 @@ class ProjectList(generics.ListAPIView):
 class ProjectDetail(generics.RetrieveAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    lookup_field = 'project_id'
+    # lookup_field = 'project_id'
 
 
 class IssueList(generics.ListCreateAPIView):
@@ -46,7 +46,7 @@ class IssueList(generics.ListCreateAPIView):
     def get_queryset(self):
         if self.kwargs['project_id']:
             queryset = Issue.objects.filter(project_id=self.kwargs['project_id'])
-            if queryset.exists():
+            if queryset:
                 return queryset
             else:
                 raise NotFound(f'Project not found')
@@ -58,7 +58,7 @@ class IssueList(generics.ListCreateAPIView):
         # issue = Issue.objects.filter(pk=issue_id)
         if self.kwargs['project_id']:
             queryset = Project.objects.filter(pk=self.kwargs['project_id'])
-            if queryset.exists():
+            if queryset:
                 serializer.save(project=queryset.first())
             else:
                 raise NotFound(f'Comment does not exist for the id: {issue_id}')
