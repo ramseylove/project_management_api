@@ -2,6 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import generics
 from rest_framework import status
 from django.contrib.auth import get_user_model
+from rest_framework.exceptions import ValidationError, NotFound
 from rest_framework.response import Response
 
 from .models import Project, Issue, Comment, IssueImage, CommentImage
@@ -12,7 +13,8 @@ from .serializers import \
     IssueImageSerializer, \
     CommentImageSerializer
 
-
+# TODO create relations between objects related_name like issues to issue_images
+# TODO Ability to upload images to Issue or Comment with nested serialization
 class ProjectList(generics.ListAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
@@ -82,27 +84,29 @@ class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
 class CommentImageList(generics.ListCreateAPIView):
     serializer_class = CommentImageSerializer
     lookup_kwarg = 'comment_id'
-    queryset = CommentImage.objects.all()
 
-    # def get_queryset(self):
-    #     queryset = CommentImage.objects.all()
-    #     comment_id = self.kwargs['comment_id']
-    #     if comment_id is not None:
-    #         queryset = queryset.filter(comment_id=comment_id)
-    #
-    #     return queryset
+    def get_queryset(self):
+        if self.kwargs['comment_id']:
+            queryset = CommentImage.objects.filter(comment_id=self.kwargs['comment_id'])
+            if queryset.exists():
+                return queryset
+            else:
+                raise NotFound(f'Comment not found')
+        else:
+            raise NotFound(f'Comment id not found in url')
 
     def perform_create(self, serializer):
-        # comment_id = self.kwargs['comment_id']
-
-        comment = Comment.objects.get(pk=self.kwargs)
-        if comment:
-            serializer.save(comment=comment)
+        comment_id = self.kwargs['comment_id']
+        comment = Comment.objects.filter(pk=comment_id)
+        if comment.exists():
+            serializer.save(comment=comment.first())
+        else:
+            raise NotFound(f'Comment does not exist for the id: {comment_id}')
 
 
 class IssueImageList(generics.ListCreateAPIView):
     serializer_class = IssueImageSerializer
-
+    # TODO refactor queryset and create to perform_create
     def get_queryset(self):
         queryset = IssueImage.objects.all()
         issue_id = self.request.query_params.get('issue_id')
