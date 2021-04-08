@@ -18,7 +18,7 @@ from .serializers import \
 class ProjectList(generics.ListAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    lookup_field = 'project_id'
+    # lookup_field = 'project_id'
 
     def get_queryset(self):
         user = get_user_model()

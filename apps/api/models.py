@@ -68,7 +68,7 @@ class Project(TimestampUserMeta, models.Model):
 class Issue(TimestampUserMeta, models.Model):
     summary = models.CharField(max_length=100)
     description = models.TextField(verbose_name='Issue Description')
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='issues')
 
     class Status(models.IntegerChoices):
         on_hold = 1

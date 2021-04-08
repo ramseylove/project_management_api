@@ -2,18 +2,6 @@ from rest_framework import serializers
 from .models import Project, Issue, Comment, IssueImage, CommentImage
 
 
-class ProjectSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Project
-        fields = ('id',
-                  'name',
-                  'description',
-                  'client',
-                  'priority',
-                  'status',)
-
-
 class IssueImageSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -41,6 +29,22 @@ class IssueSerializer(serializers.ModelSerializer):
             'issueType',
             'issue_images',
         )
+        depth = 1
+
+
+class ProjectSerializer(serializers.ModelSerializer):
+    issues = IssueSerializer(many=True)
+
+    class Meta:
+        model = Project
+        fields = ('id',
+                  'name',
+                  'description',
+                  'client',
+                  'priority',
+                  'status',
+                  'issues',)
+        depth = 1
 
 
 class CommentImageSerializer(serializers.ModelSerializer):
