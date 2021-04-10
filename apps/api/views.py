@@ -21,13 +21,10 @@ class ProjectList(generics.ListAPIView):
     # lookup_field = 'project_id'
 
     def get_queryset(self):
-        user = get_user_model()
+
         if self.request.user.is_authenticated:
+            user = get_user_model()
             user = user.objects.get(id=self.request.user.id)
-            profile = user.userprofile
-            print(type(profile))
-        else:
-            user = user.objects.get(id=1)
             profile = user.userprofile
         return super(ProjectList, self).get_queryset().filter(userprofile=profile)
 
@@ -54,14 +51,14 @@ class IssueList(generics.ListCreateAPIView):
             raise NotFound(f'Project id not found in url')
 
     def perform_create(self, serializer):
-        # issue_id = self.request.data['issue']
-        # issue = Issue.objects.filter(pk=issue_id)
+        project_id = self.kwargs['project_id']
+
         if self.kwargs['project_id']:
-            queryset = Project.objects.filter(pk=self.kwargs['project_id'])
+            queryset = Project.objects.filter(pk=project_id)
             if queryset:
                 serializer.save(project=queryset.first())
             else:
-                raise NotFound(f'Comment does not exist for the id: {issue_id}')
+                raise NotFound(f'Project does not exist for the id: {project_id}')
 
 
 class IssueDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -77,7 +74,7 @@ class CommentList(generics.ListCreateAPIView):
     def get_queryset(self):
         if self.kwargs['issue_id']:
             queryset = Comment.objects.filter(issue_id=self.kwargs['issue_id'])
-            if queryset.exists():
+            if queryset:
                 return queryset
             else:
                 raise NotFound(f'Issue not found')
@@ -87,7 +84,7 @@ class CommentList(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         issue_id = self.kwargs['issue_id']
         issue = Issue.objects.filter(pk=issue_id)
-        if issue.exists():
+        if issue:
             serializer.save(issue=issue.first())
         else:
             raise NotFound(f'Comment does not exist for the id: {issue_id}')
@@ -106,7 +103,7 @@ class CommentImageList(generics.ListCreateAPIView):
     def get_queryset(self):
         if self.kwargs['comment_id']:
             queryset = CommentImage.objects.filter(comment_id=self.kwargs['comment_id'])
-            if queryset.exists():
+            if queryset:
                 return queryset
             else:
                 raise NotFound(f'Comment not found')
@@ -116,7 +113,7 @@ class CommentImageList(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         comment_id = self.kwargs['comment_id']
         comment = Comment.objects.filter(pk=comment_id)
-        if comment.exists():
+        if comment:
             serializer.save(comment=comment.first())
         else:
             raise NotFound(f'Comment does not exist for the id: {comment_id}')
@@ -129,7 +126,7 @@ class IssueImageList(generics.ListCreateAPIView):
     def get_queryset(self):
         if self.kwargs['issue_id']:
             queryset = IssueImage.objects.filter(issue_id=self.kwargs['issue_id'])
-            if queryset.exists():
+            if queryset:
                 return queryset
             else:
                 raise NotFound(f'Issue not found')
@@ -139,8 +136,8 @@ class IssueImageList(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         issue_id = self.kwargs['issue_id']
         issue = Issue.objects.filter(pk=issue_id)
-        if issue.exists():
-            serializer.save(comment=issue.first())
+        if issue:
+            serializer.save(issue=issue.first())
         else:
             raise NotFound(f'Comment does not exist for the id: {issue_id}')
 
