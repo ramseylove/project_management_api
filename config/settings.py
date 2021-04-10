@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'imagekit',
     'djoser',
     'drf_yasg',
+    'guardian',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -66,6 +67,11 @@ ROOT_URLCONF = 'config.urls'
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/topics/auth/customizing/#substituting-a-custom-user-model
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend', # this is default
+    'guardian.backends.ObjectPermissionBackend',
+)
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
