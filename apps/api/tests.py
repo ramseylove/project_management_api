@@ -82,7 +82,8 @@ class ProjectListTest(APITestCase):
         self.testuser2 = user.objects.create_user(email='testuser2@email.com',
                                                   password='abc123-pwd')
         # self.client.force_authenticate(user=testuser1)
-        self.token = Token.objects.create(user=self.testuser2)
+        # self.token = Token.objects.create(user=self.testuser2)
+        self.token = Token.objects.get(Custom__username=self.testuser2.username)
         self.api_authentication()
 
     def api_authentication(self):
