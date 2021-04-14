@@ -37,7 +37,7 @@ class IssueSerializer(serializers.ModelSerializer):
         depth = 1
 
 
-class ProjectSerializer(ObjectPermissionsAssignmentMixin, serializers.ModelSerializer):
+class ProjectSerializer(serializers.ModelSerializer):
     issues = IssueSerializer(many=True)
 
     class Meta:
@@ -51,19 +51,19 @@ class ProjectSerializer(ObjectPermissionsAssignmentMixin, serializers.ModelSeria
                   'issues',)
         depth = 1
 
-    def get_permissions_map(self, created):
-        # current_user = self.context['request'].user
-        customer_user = Group.objects.get(name='customer_user')
-        customer_manager = Group.objects.get(name='customer_manager')
-        developer = Group.objects.get(name='developer')
-        admin_manager = Group.objects.get(name='admin_manager')
-
-        return {
-            'view_project': [customer_user, customer_manager, developer, admin_manager],
-            'add_project': [admin_manager],
-            'change_project': [admin_manager],
-            'delete_project': [admin_manager]
-        }
+    # def get_permissions_map(self, created):
+    #     # current_user = self.context['request'].user
+    #     customer_user = Group.objects.get(name='customer_user')
+    #     customer_manager = Group.objects.get(name='customer_manager')
+    #     developer = Group.objects.get(name='developer')
+    #     admin_manager = Group.objects.get(name='admin_manager')
+    #
+    #     return {
+    #         'view_project': [customer_user, customer_manager, developer, admin_manager],
+    #         'add_project': [admin_manager],
+    #         'change_project': [admin_manager],
+    #         'delete_project': [admin_manager]
+    #     }
 
 
 class CommentImageSerializer(serializers.ModelSerializer):

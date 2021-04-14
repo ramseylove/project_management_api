@@ -64,14 +64,6 @@ class Project(TimestampUserMeta, models.Model):
     def __str__(self):
         return f'{self.name}'
 
-    class Meta:
-        permissions = (
-            # ('view_project', 'Can View Project'),
-            # ('add_project', 'Can Add Project'),
-            # ('change_project', 'Can Change Project'),
-            # ('delete_project', 'Can Delete Project'),
-        )
-
 
 class Issue(TimestampUserMeta, models.Model):
     summary = models.CharField(max_length=100)

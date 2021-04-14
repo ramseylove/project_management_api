@@ -63,6 +63,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'config.urls'
 
+# LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'projects'
+
 # CUSTOM USER MODEL CONFIGS
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/topics/auth/customizing/#substituting-a-custom-user-model

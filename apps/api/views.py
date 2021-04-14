@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from guardian.shortcuts import get_objects_for_user
 from rest_framework import generics
 from rest_framework import status
 from rest_framework_guardian import filters
@@ -20,23 +21,21 @@ from .serializers import \
 class ProjectList(generics.ListAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    # lookup_field = 'project_id'
     permission_classes = [CustomObjectPermissions]
     filter_backends = [filters.ObjectPermissionsFilter]
 
     # def get_queryset(self):
-    #
-    #     if self.request.user.is_authenticated:
-    #         user = get_user_model()
-    #         user = user.objects.get(id=self.request.user.id)
-    #         profile = user.userprofile
-    #     return super(ProjectList, self).get_queryset().filter(userprofile=profile)
+    #     queryset = get_objects_for_user(self.request.user, )
+
+
+
 
 
 class ProjectDetail(generics.RetrieveAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    # lookup_field = 'project_id'
+    permission_classes = [CustomObjectPermissions]
+    lookup_url_kwarg = 'project_id'
 
 
 class IssueList(generics.ListCreateAPIView):

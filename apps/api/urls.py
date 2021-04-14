@@ -1,8 +1,13 @@
 from django.urls import path
-from .views import ProjectList, ProjectDetail, IssueList, IssueDetail, IssueImageList, CommentList, CommentDetail, CommentImageList
+from .views import \
+    ProjectList, ProjectDetail, \
+    IssueList, IssueDetail, \
+    IssueImageList, \
+    CommentList, CommentDetail, \
+    CommentImageList
 
 urlpatterns = [
-    path('projects/', ProjectList.as_view()),
+    path('projects/', ProjectList.as_view(), name='projects'),
     path('projects/<int:project_id>/', ProjectDetail.as_view()),
     path('projects/<int:project_id>/issues/', IssueList.as_view()),
     path('issues/<int:issue_id>/', IssueDetail.as_view()),
