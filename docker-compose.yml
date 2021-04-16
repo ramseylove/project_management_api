@@ -8,6 +8,7 @@ services:
       - ENVIRONMENT=development
       - SECRET_KEY=${SECRET_KEY}
       - DEBUG=1
+      - DB_HOST=192.168.0.62
     env_file:
       - .env
     volumes:
