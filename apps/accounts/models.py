@@ -86,10 +86,5 @@ class UserProfile(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
+        Token.objects.create(user=instance)
     instance.userprofile.save()
-
-
-# @receiver(post_save, sender=settings.AUTH_USER_MODEL)
-# def create_user_token(sender, instance, created, **kwargs):
-#     if created:
-#         Token.objects.create(user=instance)
