@@ -4,7 +4,7 @@
 .vscode/
 .idea/
 # ignore dotenv file
-.env
+.env*
 
 ## ignore static collect files
 static/
