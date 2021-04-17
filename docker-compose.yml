@@ -9,8 +9,12 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - DEBUG=1
       - DB_HOST=192.168.0.62
+      - DB=pmb_db
+      - DB_USER=pmb_db_user
+      - DB_PASS=d1!oN56@ePWBSB
+      - DB_PORT=5432
     env_file:
-      - .env
+      - .env.dev
     volumes:
       - .:/code
     ports:
