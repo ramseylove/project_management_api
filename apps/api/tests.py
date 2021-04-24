@@ -90,7 +90,7 @@ class ProjectListTest(APITestCase):
 
     def test_project_list_authenticated(self):
         # self.client.force_login(user=self.testuser1)
-        response = self.client.get(self.list_projects_url)
+        response = self.client.get('/api/v1/projects')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_project_list_un_authenticated(self):
