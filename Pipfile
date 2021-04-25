@@ -19,6 +19,7 @@ djoser = "==2.1.0"
 drf-yasg = "*"
 djangorestframework-guardian = "*"
 django-guardian = "*"
+parallel-ssh = "*"
 
 [requires]
 python_version = "3.7"

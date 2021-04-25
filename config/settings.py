@@ -153,7 +153,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+# STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 if os.environ.get('USE_S3'):
 
@@ -163,7 +163,7 @@ if os.environ.get('USE_S3'):
     AWS_S3_ENDPOINT_URL = 'https://sfo3.digitaloceanspaces.com'
     AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
     # s3 static settings
-    STATIC_LOCATION = STATICFILES_DIRS
+    STATIC_LOCATION = os.path.join(BASE_DIR, 'static')
     STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_ENDPOINT_URL}/{STATIC_LOCATION}/'
     STATICFILES_STORAGE = 'config.custom_storages.StaticStorage'
     # s3 public media settings

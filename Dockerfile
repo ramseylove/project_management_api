@@ -1,6 +1,8 @@
 # Pull base image
 FROM python:3.7.9
 
+ENV PATH="/scripts:${PATH}"
+
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1

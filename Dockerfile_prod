@@ -1,0 +1,23 @@
+# Pull base image
+FROM python:3.7.9
+
+ENV PATH="/scripts:${PATH}"
+
+RUN pip install pipenv
+COPY Pipfile Pipfile.lock /code/
+RUN cd /code && pipenv lock --keep-outdated --requirements > requirements.txt
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Set work directory
+WORKDIR /code
+
+# Copy project
+COPY . /code/
+
+RUN chmod +x /scripts/*
+RUN pip install -r /code/requirements.txt
+
+CMD ["entrypoint_prod.sh"]
