@@ -5,16 +5,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile_prod
-    command: python /code/manage.py runserver 0.0.0.0:8000
     environment:
       - ENVIRONMENT=development
-      - SECRET_KEY=n^7y0lbvqx0(vpzfek)aptr2@n%-i%tgcu#7nfx9apu3_5fb%_
       - DEBUG=1
-      - DB_HOST=192.168.0.62
-      - DB=pmb_db
-      - DB_USER=pmb_db_user
-      - DB_PASS=d1!oN56@ePWBSB
-      - DB_PORT=5432
     volumes:
       - .:/code
     ports:

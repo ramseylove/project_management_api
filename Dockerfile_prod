@@ -17,7 +17,7 @@ WORKDIR /code
 # Copy project
 COPY . /code/
 
-RUN chmod +x /scripts/*
+RUN chmod +x /code/scripts/*
 RUN pip install -r /code/requirements.txt
 
 CMD ["entrypoint_prod.sh"]
