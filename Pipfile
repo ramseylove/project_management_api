@@ -4,23 +4,22 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-django-extensions = "*"
-psycopg2-binary = "*"
 
 [packages]
 django = "==3.1.7"
+psycopg2-binary = "==2.8.6"
 djangorestframework = "==3.12.2"
 python-dotenv = "==0.16.0"
 django-storages = "==1.11.1"
 boto3 = "==1.17.43"
 pillow = "==8.2.0"
 django-imagekit = "==4.0.2"
+django-extensions = "==3.1.2"
 djoser = "==2.1.0"
-drf-yasg = "==1.20.0"
-djangorestframework-guardian = "==0.3.0"
-django-guardian = "==2.3.0"
-gunicorn = "==20.1.0"
-dj-database-url = "==0.5.0"
+drf-yasg = "*"
+djangorestframework-guardian = "*"
+django-guardian = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.7"
