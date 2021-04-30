@@ -2,7 +2,9 @@
 FROM python:3.8-slim-buster
 
 # Create and Set working directory
-RUN mkdir /app
+RUN useradd app -m -d /app \
+    && chmod -R 755 /app
+
 WORKDIR /app
 
 #expoose the port for dokku
@@ -14,9 +16,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PORT=8000
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends gcc libc-dev python3-dev \
+    && apt-get install gcc python3-dev libpq-dev -y  \
     && pip install --upgrade pip \
-    && apt-get autoclean
+    && apt-get clean
 
 
 COPY requirements.txt .
@@ -27,11 +29,8 @@ RUN pip install -r requirements.txt
 COPY . .
 
 RUN ./manage.py collectstatic --noinput
-#
-#RUN useradd -D app \
-#    && chown +R app:app /app \
-#    && chmod +R 755 /app
+
 ##run in container as unpriviliged app user
-#USER app
+USER app
 
 CMD gunicorn config.wsgi:application --bind 0.0.0.0:$PORT

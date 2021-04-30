@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     'apps.utils',
 
     # third-Party
-    'django_extensions',
+    # 'django_extensions',
     'rest_framework',
     'rest_framework.authtoken',
     'storages',
