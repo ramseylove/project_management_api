@@ -23,7 +23,10 @@ SECRET_KEY = os.getenv('SECRET_KEY', "somedumbsecretkey")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', default=0)
 
-ALLOWED_HOSTS = [ gethostname(), gethostbyname(gethostname()), ]
+ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS'),]
+# ALLOWED_HOSTS_ENV = os.getenv('ALLOWED_HOSTS')
+# if ALLOWED_HOSTS_ENV:
+# 	ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(',')
 
 
 # Application definition
