@@ -2,6 +2,7 @@ from pathlib import Path
 import os
 import dj_database_url
 from dotenv import load_dotenv
+from socket import gethostname, gethostbyname
 
 # load envrionment variable from .env file
 load_dotenv()
@@ -22,7 +23,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', "somedumbsecretkey")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', default=0)
 
-ALLOWED_HOSTS = ['localhost', '0.0.0.0', '127.0.0.1']
+ALLOWED_HOSTS = [ gethostname(), gethostbyname(gethostname()), ]
 
 
 # Application definition
