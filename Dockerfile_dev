@@ -4,8 +4,7 @@ FROM python:3.8-slim-buster
 ENV PATH="/scripts:${PATH}"
 
 # Create and Set working directory
-RUN useradd app -m -d /app \
-    && chmod -R 755 /app
+RUN useradd app -m -d /app
 
 WORKDIR /app
 
@@ -20,12 +19,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 RUN apt-get update \
     && apt-get install gcc python3-dev libpq-dev -y  \
     && pip install --upgrade pip \
-    && pip install pipenv \
     && apt-get clean
 
-COPY Pipfile Pipfile.lock .
-RUN pipenv lock --keep-outdated --requirements > requirements.txt
-RUN pip install -r requirements.txt
+COPY requirements-dev.txt requirements-dev.txt
+RUN pip install -r requirements-dev.txt
 
 # Copy project
 COPY . .
@@ -35,4 +32,4 @@ RUN chmod +x /app/scripts/*
 ##run in container as unprivileged app user
 USER app
 
-ENTRYPOINT ["/scripts/entrypoint.sh"]
+ENTRYPOINT ["scripts/entrypoint.sh"]

@@ -17,6 +17,7 @@ djoser = "==2.1.0"
 drf-yasg = "*"
 djangorestframework-guardian = "*"
 django-guardian = "*"
+dj-database-url = "*"
 
 [packages]
 django = "==3.1.7"
@@ -32,6 +33,7 @@ drf-yasg = "*"
 djangorestframework-guardian = "*"
 django-guardian = "*"
 gunicorn = "*"
+dj-database-url = "*"
 
 [requires]
 python_version = "3.7"

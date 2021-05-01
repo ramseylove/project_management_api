@@ -4,7 +4,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile_wdb
+      dockerfile: Dockerfile_dev
     command: python /code/manage.py runserver 0.0.0.0:8000
     env_file:
       - .env.db.dev
@@ -20,7 +20,6 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     environment:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
-
     ports:
       - "5432:5432"
 volumes:

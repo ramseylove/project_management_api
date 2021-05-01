@@ -38,8 +38,6 @@ INSTALLED_APPS = [
     'apps.utils',
 
     # third-Party
-    # TODO Make django extensions available for dev only
-    # 'django_extensions',
     'rest_framework',
     'rest_framework.authtoken',
     'storages',
@@ -56,6 +54,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
 ]
+
+if ENVIRONMENT == 'development':
+    INSTALLED_APPS += ['django_extensions', ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -114,8 +115,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 # local network postgres # 192.168.0.62
-# DOCKER_DB = True
-if os.environ.get('DATABASE_URL', ''):
+DB_URL = os.environ.get('DATABASE_URL', False)
+if DB_URL:
     DATABASES = {
         'default': dj_database_url.config()
     }

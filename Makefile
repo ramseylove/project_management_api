@@ -1,4 +1,4 @@
-.PHONY: init ci analyze build rebuild migrate lang-make lang-compile
+.PHONY: init ci analyze dev_req req build_dev rebuild migrate superuser
 
 init:
 	curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
@@ -6,12 +6,17 @@ init:
 analyze:
 	pipenv run flake8 .
 	pipenv run isort -v
-build:
-	docker-compose -f docker-compose-withdb.yml build
+dev_req:
+	pipenv lock -r --dev-only --keep-outdated > requirements-dev.txt
+req:
+	pipenv lock -r --keep-outdated --requirements > requirements.txt
+build_dev:
+	pipenv lock -r --dev-only --keep-outdated > requirements-dev.txt
+	docker-compose -f docker-compose-dev.yml build
 up:
-	docker-compose -f local.yml up
+	docker-compose -f docker-compose-dev.yml up
 migrate:
-	docker-compose -f local.yml run --rm django python manage.py migrate
+	docker-compose -f docker-compose-dev.yml run --rm web python manage.py migrate
 superuser:
-	docker-compose -f docker-compose-prod.yml run --rm web python manage.py createsuperuser
+	docker-compose -f docker-compose-dev.yml run --rm web python manage.py createsuperuser
 
