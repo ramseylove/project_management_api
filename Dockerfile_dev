@@ -1,6 +1,8 @@
 # Pull base image
 FROM python:3.8-slim-buster
 
+ENV PATH="/scripts:${PATH}"
+
 # Create and Set working directory
 RUN useradd app -m -d /app \
     && chmod -R 755 /app
@@ -18,19 +20,19 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 RUN apt-get update \
     && apt-get install gcc python3-dev libpq-dev -y  \
     && pip install --upgrade pip \
+    && pip install pipenv \
     && apt-get clean
 
-
-COPY requirements.txt .
-
+COPY Pipfile Pipfile.lock .
+RUN pipenv lock --keep-outdated --requirements > requirements.txt
 RUN pip install -r requirements.txt
 
 # Copy project
 COPY . .
 
-RUN ./manage.py collectstatic --noinput
+RUN chmod +x /app/scripts/*
 
 ##run in container as unprivileged app user
 USER app
 
-ENTRYPOINT ["/code/entrypoint.sh"]
+ENTRYPOINT ["/scripts/entrypoint.sh"]
