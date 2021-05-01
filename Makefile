@@ -3,13 +3,11 @@
 init:
 	curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
 	poetry install
-ci:
-	pytest --cov=./
 analyze:
 	pipenv run flake8 .
 	pipenv run isort -v
 build:
-	docker-compose -f local.yml build
+	docker-compose -f docker-compose-withdb.yml build
 up:
 	docker-compose -f local.yml up
 migrate:
