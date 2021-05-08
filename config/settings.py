@@ -1,11 +1,11 @@
 from pathlib import Path
 import os
 import dj_database_url
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from socket import gethostname, gethostbyname
 
-# load envrionment variable from .env file
-load_dotenv()
+# # load envrionment variable from .env file
+# load_dotenv()
 
 # USE_S3 = os.getenv('USE_S3') == 'True'
 
@@ -15,18 +15,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
-ENVIRONMENT = os.getenv('ENVIRONMENT', default='production')
+ENVIRONMENT = os.environ.get('ENVIRONMENT', default='production')
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', "somedumbsecretkey")
+SECRET_KEY = os.environ.get('SECRET_KEY', "somedumbsecretkey")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', default=0)
+DEBUG = os.environ.get('DEBUG', default=0)
 
-ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS'), ]
-# ALLOWED_HOSTS_ENV = os.getenv('ALLOWED_HOSTS')
-# if ALLOWED_HOSTS_ENV:
-# 	ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(',')
+ALLOWED_HOSTS = []
+ALLOWED_HOSTS_ENV = os.environ.get('ALLOWED_HOSTS', False)
+if ALLOWED_HOSTS_ENV:
+    ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(','))
 
 
 # Application definition
