@@ -1,12 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from guardian.shortcuts import get_objects_for_user
 from rest_framework import generics
 from rest_framework import status
-from rest_framework_guardian import filters
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import ValidationError, NotFound
 
-from .permissions import CustomObjectPermissions
 from .models import Project, Issue, Comment, IssueImage, CommentImage
 from .serializers import \
     ProjectSerializer, \
@@ -21,17 +18,26 @@ from .serializers import \
 class ProjectList(generics.ListAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    permission_classes = [CustomObjectPermissions]
-    filter_backends = [filters.ObjectPermissionsFilter]
 
-    # def get_queryset(self):
-    #     queryset = get_objects_for_user(self.request.user, )
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            queryset = Project.objects.all()
+            return queryset
+        else:
+            if self.request.user.is_authenticated:
+                user = get_user_model()
+                user = user.objects.get(id=self.request.user.id)
+                profile = user.userprofile
+                queryset = super(ProjectList, self).get_queryset().filter(userprofile=profile)
+                # queryset = Project.objects.filter(userprofile=profile)
+                return queryset
+
+        return Project.objects.none()
 
 
 class ProjectDetail(generics.RetrieveAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    permission_classes = [CustomObjectPermissions]
     lookup_url_kwarg = 'project_id'
 
 

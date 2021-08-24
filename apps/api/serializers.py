@@ -1,6 +1,4 @@
-from django.contrib.auth.models import Group
 from rest_framework import serializers
-from rest_framework_guardian.serializers import ObjectPermissionsAssignmentMixin
 
 from .models import Project, Issue, Comment, IssueImage, CommentImage
 

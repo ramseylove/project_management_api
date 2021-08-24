@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'imagekit',
     'djoser',
     'drf_yasg',
-    'guardian',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -80,7 +79,6 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',  # this is default
-    'guardian.backends.ObjectPermissionBackend',
 )
 
 REST_FRAMEWORK = {

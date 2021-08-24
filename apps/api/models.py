@@ -7,6 +7,7 @@ import os
 
 from apps.utils.models import TimestampUserMeta
 
+# TODO: Convert ID fields to UUID
 
 @deconstructible
 class PathAndRename(object):

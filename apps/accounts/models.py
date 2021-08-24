@@ -6,7 +6,6 @@ from django.contrib.auth import get_user_model
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from rest_framework.authtoken.models import Token
-# from .mixins import CustomPermissionsMixin
 # from apps.api.models import Project
 from django.conf import settings
 
