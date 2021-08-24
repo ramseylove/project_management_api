@@ -4,20 +4,22 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile_dev
-    command: python /app/manage.py runserver 0.0.0.0:8000
+      dockerfile: Dockerfile
+    command: 'python /app/manage.py runserver 0.0.0.0:8000'
     env_file:
-      - .env.db.dev
+      - envs/dev.env
+    stdin_open: true
+    tty: true
     volumes:
-      - .:/app
+      - '.:/app'
     ports:
-      - 8000:8000
+      - '8000:8000'
     depends_on:
       - db
   db:
     image: postgres:11
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - 'postgres_data:/var/lib/postgresql/data/'
     environment:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
     ports:

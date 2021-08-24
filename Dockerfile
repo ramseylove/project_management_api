@@ -1,9 +1,14 @@
 # Pull base image
 FROM python:3.8-slim-buster
 
+ENV PATH="/scripts:${PATH}"
+
 # Create and Set working directory
-RUN useradd app -m -d /app \
-    && chmod -R 755 /app
+RUN useradd app -m -d /app
+
+# Production user with limited permissions
+# RUN useradd app -m -d /app \
+#    && chmod -R 755 /app
 
 WORKDIR /app
 
@@ -21,16 +26,21 @@ RUN apt-get update \
     && apt-get clean
 
 
-COPY requirements.txt .
-
-RUN pip install -r requirements.txt
-
+#COPY requirements.txt .
 # Copy project
-COPY . .
+COPY . /app/
 
-RUN ./manage.py collectstatic --noinput
+RUN pip install -r reqs/requirements-dev.txt
 
-##run in container as unpriviliged app user
+RUN chmod +x /app/scripts/*
+
+## Copy project
+#COPY . .
+
+##run in container as app user
 USER app
 
-CMD gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
+ENTRYPOINT ["scripts/entrypoint.sh"]
+
+# production server run command should probably be in entrypoint script
+# CMD gunicorn config.wsgi:application --bind 0.0.0.0:$PORT

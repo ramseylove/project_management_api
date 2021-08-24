@@ -1,4 +1,7 @@
-.PHONY: init ci analyze dev_req req build_dev up down rebuild migrate superuser
+.PHONY: init analyze remove_vol build up down migrate migrations superuser collectstatic shell
+
+projectName = project_management_api
+dockerComposeFile = docker-compose-dev.yml
 
 init:
 	curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
@@ -6,19 +9,21 @@ init:
 analyze:
 	pipenv run flake8 .
 	pipenv run isort -v
-dev_req:
-	pipenv lock -r --dev-only --keep-outdated > requirements-dev.txt
-req:
-	pipenv lock -r --keep-outdated --requirements > requirements.txt
-build_dev:
-	pipenv lock -r --dev-only --keep-outdated > requirements-dev.txt
-	docker-compose -f docker-compose-dev.yml build
+remove_vol:
+	docker volume rm $(projectName)_postgres_data
+build:
+	docker-compose -f $(dockerComposeFile) build
 up:
-	docker-compose -f docker-compose-dev.yml up
+	docker-compose -f $(dockerComposeFile) up
 down:
-	docker-compose -f docker-compose-dev.yml down
+	docker-compose -f $(dockerComposeFile) down
+migrations:
+	docker-compose -f $(dockerComposeFile) run --rm web python manage.py makemigrations $(app)
 migrate:
-	docker-compose -f docker-compose-dev.yml run --rm web python manage.py migrate
+	docker-compose -f $(dockerComposeFile) run --rm web python manage.py migrate
 superuser:
-	docker-compose -f docker-compose-dev.yml run --rm web python manage.py createsuperuser
-
+	docker-compose -f $(dockerComposeFile) run --rm web python manage.py createsuperuser
+collectstatic:
+	docker-compose -f $(dockerComposeFile) run --rm web python manage.py collectstatic --no-input
+shell:
+	docker-compose -f $(dockerComposeFile) run --rm web python manage.py shell_plus
