@@ -26,7 +26,6 @@ RUN apt-get update \
     && apt-get clean
 
 
-#COPY requirements.txt .
 # Copy project
 COPY . /app/
 
